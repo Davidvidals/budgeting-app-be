@@ -1,17 +1,17 @@
 const express = require("express");
-const budgetRoutes = express.Router();
-const budgetArr = require("../models/Transactions.js")
+const budgetRoutes = express.Router()
+const Transactions = require("../models/Transactions.js")
 
 //index (GET)
 budgetRoutes.get('/',(req,res)=>{
-    res.json(budgetArr)
+    res.json(Transactions)
 });
 
 //show (GET)
 budgetRoutes.get("/:index", (req, res)=>{
     const { index } = req.params;
-    if(budgetArr[index]){
-        res.json(budgetArr[index]);
+    if(Transactions[index]){
+        res.json(Transactions[index]);
     } else {
         res.status(404).json({error: "Not found"});
     }
@@ -19,15 +19,15 @@ budgetRoutes.get("/:index", (req, res)=>{
 
 //create (POST)
 budgetRoutes.post("/", (req, res)=>{
-    budgetArr.push(req.body);
-    res.json(budgetArr[budgetArr.length-1]);
+    Transactions.push(req.body);
+    res.json(Transactions[Transactions.length-1]);
 })
 
 //delete (DELETE)
 budgetRoutes.delete("/:index", (req, res)=>{
     const { index } = req.params;
-    if(budgetArr[index]){
-        let remove = budgetArr.splice(index, 1);
+    if(Transactions[index]){
+        let remove = Transactions.splice(index, 1);
         res.json(remove[0]);
     } else {
         res.status(404).json({error: "Not found"});
@@ -38,7 +38,7 @@ budgetRoutes.delete("/:index", (req, res)=>{
 budgetRoutes.put("/:index", (req, res)=>{
     let { index } = req.params;
 
-    if(!budgetArr[index]){
+    if(!Transactions[index]){
         res.status(404).json({
             error: "Not found"
         })
@@ -47,10 +47,10 @@ budgetRoutes.put("/:index", (req, res)=>{
 
     let { item_name, amount, date, from, category } = req.body;
     if(item_name && amount && date && from !== undefined && category){
-        budgetArr[index] = {
+        Transactions[index] = {
             item_name, amount, date, from, category
         };
-        res.json(budgetArr[index]);
+        res.json(Transactions[index]);
     } else {
         res.status(422).json({
             error: "Please provide all fields"
